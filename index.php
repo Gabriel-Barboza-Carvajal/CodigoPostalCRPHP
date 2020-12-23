@@ -43,7 +43,7 @@ and open the template in the editor.
                 </div>
 
                 <p id="MostrarCodigo">
-                    <strong>El Codigo es:</strong>
+                    <strong>El Código es:</strong>
                     <strong><span id="codigo">(No hay ninguna opción seleccionada)</span></strong>
                 </p>           
             </div>
