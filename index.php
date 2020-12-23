@@ -31,7 +31,7 @@ and open the template in the editor.
                         <select id="MenuProvincia" onchange="filtrarMenuCanton()">
 
                         </select>
-                        <p style="font-size: 20px;"><strong>Canton : </strong></p>
+                        <p style="font-size: 20px;"><strong>Cantón : </strong></p>
                         <select id="MenuCanton" onchange="filtrarMenuDistrito()" >
 
                         </select>
