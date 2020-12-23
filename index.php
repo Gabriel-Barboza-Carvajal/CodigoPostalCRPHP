@@ -21,31 +21,27 @@ and open the template in the editor.
     </head>
     <body>
 
-        <div id="wrapper" class="">
-            <div id="contents" class="">
-                <div id="menu">
-                    <section>
-                        <p><strong><h2>Menú para Código Postal</h2></strong></p>
-                        <p style="font-size: 20px;"><strong>Provincia : </strong></p>
+        <div id="wrapper" class="container">
+                  
+                        <h2>Menú para Código Postal</h2>
+                        <p>Provincia : </p>
                         <select id="MenuProvincia" onchange="filtrarMenuCanton()">
 
                         </select>
-                        <p style="font-size: 20px;"><strong>Canton : </strong></p>
+                        <p>Canton : </p>
                         <select id="MenuCanton" onchange="filtrarMenuDistrito()" >
 
                         </select>
-                        <p style="font-size: 20px;"><strong>Distrito : </strong></p>
+                        <p >Distrito : </p>
                         <select id="MenuDistrito" onchange="calcularCodigo()">
 
                         </select>
-                    </section>
-                </div>
+                
 
-                <p id="MostrarCodigo">
-                    <strong>El Codigo es:</strong>
-                    <strong><span id="codigo">(No hay ninguna opción seleccionada)</span></strong>
+                <p >
+                   El Codigo es:
+                    <span id="codigo">(No hay ninguna opción seleccionada)</span>
                 </p>           
-            </div>
-        </div>
+           </div>
     </body>
 </html>

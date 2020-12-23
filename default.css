@@ -8,23 +8,6 @@ and open the template in the editor.
     Author     : gabriel
 */
 
-#menu
-{
-    text-align: center;
-    padding: 30pt 30pt 30pt 30pt;
-    font: sans-serif;
-    margin: 29pt 29pt 5pt 29pt;
-}
-
-#MostrarCodigo
-{
-    text-align: center;
-    padding: 5pt 30pt 30pt 30pt;
-    font: sans-serif;
-    font-size: 24px ;
-    margin: 5pt 29pt 29pt 29pt;
-}
-
 body{
     background-image: url("./3.jpeg"); 
     text-align: center;
