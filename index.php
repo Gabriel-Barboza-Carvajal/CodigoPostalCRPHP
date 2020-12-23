@@ -26,7 +26,7 @@ and open the template in the editor.
                 <div id="menu">
                     <section>
                         <p><strong><h2>Menú para Código Postal</h2></strong></p>
-                        <strong> <a href="https:github.com/Gabriel-Barboza-Carvajal/CodigoPostalCRPHP">Source Code</a></strong>
+                        <!--<strong> <a href="https:github.com/Gabriel-Barboza-Carvajal/CodigoPostalCRPHP">Source Code</a></strong>-->
                         <p style="font-size: 20px;"><strong>Provincia : </strong></p>
                         <select id="MenuProvincia" onchange="filtrarMenuCanton()">
 
