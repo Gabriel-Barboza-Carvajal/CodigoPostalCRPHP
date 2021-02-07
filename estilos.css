@@ -17,3 +17,8 @@ and open the template in the editor.
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
 }
+
+#msj{
+    color: black;
+    text-decoration: underline;
+}

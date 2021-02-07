@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <link rel="shortcut icon" href="2.png">
         <script src="newjavascript.js" type="text/javascript"></script>
-        
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!-- Tell the browser to be responsive to screen width -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,7 +34,7 @@ and open the template in the editor.
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
         <link href="default.css" rel="stylesheet" type="text/css"/>
         <link href="estilos.css" rel="stylesheet" type="text/css"/>   
-    
+
         <title>Código Postal CR</title>
     </head>
     <body>
@@ -48,6 +48,7 @@ and open the template in the editor.
                         <!-- left column -->
                         <div class="col-md-3 formulario">
                             <!-- general form elements -->
+                            <h4><a id="msj" href="https://github.com/Gabriel-Barboza-Carvajal/CodigoPostalCRPHP">Código fuente</a></h4>
                             <div class="card card-primary formularioColor">
                                 <div class="card-header formularioColor">
                                     <h3 class="card-title formularioTitulo">Menú para Código Postal</h3>
@@ -72,11 +73,11 @@ and open the template in the editor.
                                             </select>
                                         </div>
                                     </div><strong><h2 class="codigoFondo" >
-                                    El Código es: 
-                                    <span id="codigo">(No hay ninguna opción seleccionada)</span>
+                                            El Código es: 
+                                            <span id="codigo">(No hay ninguna opción seleccionada)</span>
                                         </h2>  </strong>
                                 </form>
-                                 
+
                             </div>
                         </div>
                     </div>
@@ -86,6 +87,6 @@ and open the template in the editor.
             <!-- /.content -->
             <!--</div>-->
         </div>
+        
     </body>
-    
 </html>
