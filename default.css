@@ -8,11 +8,19 @@ and open the template in the editor.
     Author     : gabriel
 */
 
-body{
+/* For devices smaller than 400px: */
+body {
     background-image: url("./3.jpeg"); 
     text-align: center;
     position: relative;
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: 100% 100%;
+}
+
+/* For devices 400px and larger: */
+@media only screen and (min-device-width: 400px) {
+    body {
+        background-color: scrollbar;
+    }
 }

@@ -8,9 +8,8 @@ and open the template in the editor.
     <head>
         <link rel="shortcut icon" href="2.png">
         <script src="newjavascript.js" type="text/javascript"></script>
-        <link href="default.css" rel="stylesheet" type="text/css"/>
+        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="estilos.css" rel="stylesheet" type="text/css"/>
         <!-- Tell the browser to be responsive to screen width -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Font Awesome -->
@@ -24,7 +23,7 @@ and open the template in the editor.
         <!-- JQVMap -->
         <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
         <!-- Theme style -->
-        <link rel="stylesheet" href="dist/css/adminlte.min.css">
+        <link rel="stylesheet" href="dist/css/adminlte.css">
         <!-- overlayScrollbars -->
         <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
         <!-- Daterange picker -->
@@ -32,7 +31,10 @@ and open the template in the editor.
         <!-- summernote -->
         <link rel="stylesheet" href="plugins/summernote/summernote-bs4.css">
         <!-- Google Font: Source Sans Pro -->
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">      
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
+        <link href="default.css" rel="stylesheet" type="text/css"/>
+        <link href="estilos.css" rel="stylesheet" type="text/css"/>   
+    
         <title>Código Postal CR</title>
     </head>
     <body>
@@ -46,9 +48,9 @@ and open the template in the editor.
                         <!-- left column -->
                         <div class="col-md-3 formulario">
                             <!-- general form elements -->
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Menú para Código Postal</h3>
+                            <div class="card card-primary formularioColor">
+                                <div class="card-header formularioColor">
+                                    <h3 class="card-title formularioTitulo">Menú para Código Postal</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
@@ -60,7 +62,7 @@ and open the template in the editor.
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="MenuCanton">Canton : </label>
+                                            <label for="MenuCanton">Cantón : </label>
                                             <select class="form-control"  id="MenuCanton" onchange="filtrarMenuDistrito()"  >
                                             </select>
                                         </div>
@@ -69,17 +71,12 @@ and open the template in the editor.
                                             <select class="form-control"   id="MenuDistrito" onchange="calcularCodigo()"  >
                                             </select>
                                         </div>
-                                    </div>
-                                    <!-- /.card-body -->
-
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                                <p >
-                                    El Codigo es:
+                                    </div><strong><h2 class="codigoFondo" >
+                                    El Código es: 
                                     <span id="codigo">(No hay ninguna opción seleccionada)</span>
-                                </p>   
+                                        </h2>  </strong>
+                                </form>
+                                 
                             </div>
                         </div>
                     </div>
@@ -89,6 +86,6 @@ and open the template in the editor.
             <!-- /.content -->
             <!--</div>-->
         </div>
-
     </body>
+    
 </html>
