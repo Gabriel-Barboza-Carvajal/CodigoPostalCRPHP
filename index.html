@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" href="2.png">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="default.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="newjavascript.js" type="text/javascript" defer></script>
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <title>Código Postal CR</title>
+</head>
+
+<body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js', {
+                scope: './'
+            });
+        }
+    </script>
+    <header class="header text-center">
+        <h1>Código postal Costa Rica</h1>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col justify-content-center">
+                <form>
+                    <div class="selects">
+                        <div class="form-group">
+                            <label for="MenuProvincia">Provincia</label>
+                            <select class="form-control" id="MenuProvincia" onchange="filtrarMenuCanton()">                            
+                        </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="MenuCanton">Cantón</label>
+                            <select class="form-control" id="MenuCanton" onchange="filtrarMenuDistrito()">
+                        </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="MenuDistrito">Distrito</label>
+                            <select class="form-control" id="MenuDistrito" onchange="calcularCodigo()">
+                        </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <section id="MostrarCodigo">
+                <h2>El código es:</h2>
+                <h3><span id="codigo">(No hay ninguna opción seleccionada)</span></h3>
+            </section>
+        </div>
+
+        <div class="row">
+            <button class="button" id="btninstall">Añadir a pantalla de inicio</button>
+        </div>
+
+
+
+
+    </div>
+    <script src="bootstrap.bundle.min.js"></script>
+
+    <footer class="text-center text-lg-start bg-light" style="opacity: 0.6;">
+        <!-- Copyright -->
+        <div class="text-center p-4">
+            <p>
+                <h2><a href="info.html">Info</a></h2>
+            </p>
+        </div>
+        <!-- Copyright -->
+    </footer>
+</body>
+
+</html>

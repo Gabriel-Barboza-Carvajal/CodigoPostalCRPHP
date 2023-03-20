@@ -1,5 +1,33 @@
-
 window.onload = init;
+
+var deferredPrompt;
+const addBtn = document.getElementById('btninstall');
+addBtn.style.display = 'none';
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI to notify the user they can add to home screen
+    addBtn.style.display = 'block';
+
+    addBtn.addEventListener('click', () => {
+        // hide our user interface that shows our A2HS button
+        addBtn.style.display = 'none';
+        // Show the prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the A2HS prompt');
+            } else {
+                console.log('User dismissed the A2HS prompt');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
 
 
 // variable para cargar los datos desde un array de JSON quemado para no
@@ -13,18 +41,14 @@ var tmp_can = "";
 
 
 function init() {
-//    fetch('servletCargarDatos').then(function (resultado) {
-//        return resultado.json();
-//    }).then(construirMenus);
     var numbers = datos_totales['provincia'];
     numbers.forEach(myfunction);
-    
+
     console.log(datos_registros);
     construirMenus(datos_registros);
 }
 
-function construirMenus(datos)
-{
+function construirMenus(datos) {
     console.log(datos_totales);
     construirProvincias(datos);
     construirCantones(datos);
@@ -33,8 +57,7 @@ function construirMenus(datos)
     calcularCodigo();
 }
 
-function construirProvincias(datosProvincias)
-{
+function construirProvincias(datosProvincias) {
     console.log("datos", datosProvincias);
     var refMenu = document.getElementById('MenuProvincia');
     if (refMenu) {
@@ -42,23 +65,21 @@ function construirProvincias(datosProvincias)
             refMenu.options.remove(0);
         }
         datosProvincias.forEach(
-                function (elemento, i, arreglo) {
-                    var opcion = document.createElement("option");
-                    if (elemento.canton === 0 &&
-                            elemento.distrito === 0
-                            && elemento.seq_distrito === 0)
-                    {
-                        opcion.setAttribute("value", String(i + 1));
-                        opcion.appendChild(document.createTextNode(elemento.nombre));
-                        refMenu.appendChild(opcion);
-                    }
+            function(elemento, i, arreglo) {
+                var opcion = document.createElement("option");
+                if (elemento.canton === 0 &&
+                    elemento.distrito === 0 &&
+                    elemento.seq_distrito === 0) {
+                    opcion.setAttribute("value", String(i + 1));
+                    opcion.appendChild(document.createTextNode(elemento.nombre));
+                    refMenu.appendChild(opcion);
                 }
+            }
         );
     }
 }
 
-function construirCantones(datosCantones, np)
-{
+function construirCantones(datosCantones, np) {
     console.log("datos1", datosCantones);
     np = 1;
     var refMenu = document.getElementById('MenuCanton');
@@ -67,29 +88,28 @@ function construirCantones(datosCantones, np)
             refMenu.options.remove(0);
         }
         datosCantones.forEach(
-                function (elemento, i, arreglo) {
-                    var opcion = document.createElement("option");
-                    if (
-                            elemento.provincia === np
-                            && elemento.distrito !== 0
-                            && (elemento.seq_distrito === 1)
-                            )
-                    {
-                        var s = elemento;
-                        var siguieate = arreglo[i - 1].nombre;
+            function(elemento, i, arreglo) {
+                var opcion = document.createElement("option");
+                if (
+                    elemento.provincia === np &&
+                    elemento.distrito !== 0 &&
+                    (elemento.seq_distrito === 1)
+                ) {
+                    var s = elemento;
+                    var siguieate = arreglo[i - 1].nombre;
 
-                        opcion.setAttribute("value", String(i - 1));
-                        opcion.appendChild(document.createTextNode(arreglo[i - 1].nombre));
-                        refMenu.appendChild(opcion);
+                    opcion.setAttribute("value", String(i - 1));
+                    opcion.appendChild(document.createTextNode(arreglo[i - 1].nombre));
+                    refMenu.appendChild(opcion);
 
-                    }
                 }
+            }
         );
     }
 }
 var datosTotales;
-function construirDistritos(datosDistritos, nd, np)
-{
+
+function construirDistritos(datosDistritos, nd, np) {
     console.log("datos2", datosDistritos);
     console.log("datos1", datosDistritos);
     nd = 1;
@@ -100,19 +120,18 @@ function construirDistritos(datosDistritos, nd, np)
             refMenu.options.remove(0);
         }
         datosDistritos.forEach(
-                function (elemento, i, arreglo) {
-                    var opcion = document.createElement("option");
-                    if (
-                            elemento.provincia === np
-                            && elemento.canton === nd
+            function(elemento, i, arreglo) {
+                var opcion = document.createElement("option");
+                if (
+                    elemento.provincia === np &&
+                    elemento.canton === nd
 
-                            )
-                    {
-                        opcion.setAttribute("value", String(i + 1));
-                        opcion.appendChild(document.createTextNode(elemento.nombre));
-                        refMenu.appendChild(opcion);
-                    }
+                ) {
+                    opcion.setAttribute("value", String(i + 1));
+                    opcion.appendChild(document.createTextNode(elemento.nombre));
+                    refMenu.appendChild(opcion);
                 }
+            }
         );
 
     }
@@ -127,32 +146,33 @@ function filtrarMenuCanton() {
             refMenu.options.remove(0);
         }
         datosTotales.forEach(
-                function (elemento, i, arreglo) {
-                    var opcion = document.createElement("option");
-                    var numeroPosicion = refMenuP.children[refMenuP.selectedIndex].value;
+            function(elemento, i, arreglo) {
+                var opcion = document.createElement("option");
+                var numeroPosicion = refMenuP.children[refMenuP.selectedIndex].value;
 
-                    var can = arreglo[numeroPosicion].canton;
-                    var pro = arreglo[numeroPosicion].provincia;
-                    if (
-                            elemento.provincia === pro
-                            && elemento.distrito !== 0
-                            && (elemento.seq_distrito === 1)
-                            )
-                    {
-                        var s = elemento;
-                        var siguieate = arreglo[i - 1].nombre;
-                        opcion.setAttribute("value", String(i - 1));
-                        opcion.appendChild(document.createTextNode(arreglo[i - 1].nombre));
-                        refMenu.appendChild(opcion);
+                var can = arreglo[numeroPosicion].canton;
+                var pro = arreglo[numeroPosicion].provincia;
+                if (
+                    elemento.provincia === pro &&
+                    elemento.distrito !== 0 &&
+                    (elemento.seq_distrito === 1)
+                ) {
+                    var s = elemento;
+                    var siguieate = arreglo[i - 1].nombre;
+                    opcion.setAttribute("value", String(i - 1));
+                    opcion.appendChild(document.createTextNode(arreglo[i - 1].nombre));
+                    refMenu.appendChild(opcion);
 
 
-                    }
                 }
+            }
         );
     }
 
     filtrarMenuDistrito();
+
 }
+
 
 function filtrarMenuDistrito() {
     var refDis = document.getElementById('MenuDistrito');
@@ -166,38 +186,32 @@ function filtrarMenuDistrito() {
             refDis.options.remove(0);
         }
         datosTotales.forEach(
-                function (elemento, i, arreglo) {
-                    var opcion = document.createElement("option");
-                    var numeroPosicionC = refMenuCant.children[refMenuCant.selectedIndex].value;
-                    var numeroPosicion = menuProv.children[menuProv.selectedIndex].value;
-                    var can = arreglo[numeroPosicionC].canton;
-                    var pro = arreglo[numeroPosicion].provincia;
-                    if (
-                            elemento.provincia === pro
-                            && elemento.canton === can
-                            && elemento.distrito !== 0
-                            && elemento.seq_distrito !== arreglo[i - 1].seq_distrito
-                            )
-                    {
-                        var s = elemento;
-                        opcion.setAttribute("value", String(i));
-                        opcion.appendChild(document.createTextNode(elemento.nombre));
-                        refDis.appendChild(opcion);
-                    }
+            function(elemento, i, arreglo) {
+                var opcion = document.createElement("option");
+                var numeroPosicionC = refMenuCant.children[refMenuCant.selectedIndex].value;
+                var numeroPosicion = menuProv.children[menuProv.selectedIndex].value;
+                var can = arreglo[numeroPosicionC].canton;
+                var pro = arreglo[numeroPosicion].provincia;
+                if (
+                    elemento.provincia === pro &&
+                    elemento.canton === can &&
+                    elemento.distrito !== 0 &&
+                    elemento.seq_distrito !== arreglo[i - 1].seq_distrito
+                ) {
+                    var s = elemento;
+                    opcion.setAttribute("value", String(i));
+                    opcion.appendChild(document.createTextNode(elemento.nombre));
+                    refDis.appendChild(opcion);
                 }
+            }
         );
 
     }
 
     calcularCodigo();
-//    var numeroPosicionCanton=datosTotales[refMenuCant.children[refMenuCant.selectedIndex].value].canton;
-//    var numeroPosicionDistrito=datosTotales[refDis.children[refDis.selectedIndex].value].distrito;
-//    var numeroPosicionProvincia=datosTotales[menuProv.children[menuProv.selectedIndex].value].provincia;
-//    console.log("Codigo : ",numeroPosicionProvincia,numeroPosicionCanton,numeroPosicionDistrito);
 }
 
-function calcularCodigo()
-{
+function calcularCodigo() {
     var refDis = document.getElementById('MenuDistrito');
     var menuProv = document.getElementById('MenuProvincia');
     var refMenuCant = document.getElementById('MenuCanton');
@@ -211,32 +225,26 @@ function calcularCodigo()
     var a, b, c;
 
     a = p;
-    if (ca.length >= 10)
-    {
+    if (ca.length >= 10) {
         b = ca;
-    } else
-    {
+    } else {
         b = "0" + ca;
     }
-    if (d.length >= 10)
-    {
+    if (d.length >= 10) {
         c = d;
-    } else
-    {
+    } else {
         c = "0" + d;
     }
     console.log(a, b, c);
     var refCodigo = document.getElementById("codigo");
-    if (refCodigo)
-    {
+    if (refCodigo) {
 
         refCodigo.textContent = a + b + c;
     }
 
 }
 
-function ejemplo()
-{
+function ejemplo() {
     var refDis = document.getElementById('MenuDistrito');
     var menuProv = document.getElementById('MenuProvincia');
     var refMenuCant = document.getElementById('MenuCanton');
@@ -250,18 +258,14 @@ function ejemplo()
     var a, b, c;
 
     a = p;
-    if (ca.length >= 10)
-    {
+    if (ca.length >= 10) {
         b = ca;
-    } else
-    {
+    } else {
         b = "0" + ca;
     }
-    if (d.length >= 10)
-    {
+    if (d.length >= 10) {
         c = d;
-    } else
-    {
+    } else {
         c = "0" + d;
     }
     console.log(a, b, c);
@@ -301,13 +305,14 @@ function Myfunction2(value2, index2, array2) {
     // ahora recorremos los distritos
 
     var distrito_tmp = value2['distrito'];
-    
-    tmp_can=value2['número'];
-    
+
+    tmp_can = value2['número'];
+
     distrito_tmp.forEach(Myfunction3);
 
 
 }
+
 function Myfunction3(value3, index3, array3) {
 
     datos_registros.push({
@@ -329,12 +334,9 @@ var lineaDatos = {
 
 
 var datos_totales = {
-    provincia: [
-        {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+    provincia: [{
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Carmen'
@@ -394,8 +396,7 @@ var datos_totales = {
                     nombre: 'San José'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 12,
                             nombre: 'Escazú'
@@ -415,8 +416,7 @@ var datos_totales = {
                     nombre: 'Escazú'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 15,
                             nombre: 'Desamparados'
@@ -486,8 +486,7 @@ var datos_totales = {
                     nombre: 'Desamparados'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 28,
                             nombre: 'Santiago'
@@ -542,8 +541,7 @@ var datos_totales = {
                     nombre: 'Puriscal'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 38,
                             nombre: 'San Marcos'
@@ -563,8 +561,7 @@ var datos_totales = {
                     nombre: 'Tarrazú'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 41,
                             nombre: 'Aserrí'
@@ -604,8 +601,7 @@ var datos_totales = {
                     nombre: 'Aserrí'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 48,
                             nombre: 'Ciudad Colón'
@@ -645,8 +641,7 @@ var datos_totales = {
                     nombre: 'Mora'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 55,
                             nombre: 'Guadalupe'
@@ -686,8 +681,7 @@ var datos_totales = {
                     nombre: 'Goicoechea'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 62,
                             nombre: 'Santa Ana'
@@ -722,8 +716,7 @@ var datos_totales = {
                     nombre: 'Santa Ana'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 68,
                             nombre: 'Alajuelita'
@@ -753,8 +746,7 @@ var datos_totales = {
                     nombre: 'Alajuelita'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 73,
                             nombre: 'San Isidro'
@@ -784,8 +776,7 @@ var datos_totales = {
                     nombre: 'Vázquez de Coronado'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 78,
                             nombre: 'San Ignacio'
@@ -815,8 +806,7 @@ var datos_totales = {
                     nombre: 'Acosta'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 83,
                             nombre: 'San Juan'
@@ -846,8 +836,7 @@ var datos_totales = {
                     nombre: 'Tibás'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 88,
                             nombre: 'San Vicente'
@@ -867,8 +856,7 @@ var datos_totales = {
                     nombre: 'Moravia'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 91,
                             nombre: 'San Pedro'
@@ -893,8 +881,7 @@ var datos_totales = {
                     nombre: 'Montes de Oca'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 95,
                             nombre: 'San Pablo'
@@ -924,8 +911,7 @@ var datos_totales = {
                     nombre: 'Turrubares'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 100,
                             nombre: 'Santa María'
@@ -945,8 +931,7 @@ var datos_totales = {
                     nombre: 'Dota'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 103,
                             nombre: 'Curridabat'
@@ -971,8 +956,7 @@ var datos_totales = {
                     nombre: 'Curridabat'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 107,
                             nombre: 'San Isidro de El General'
@@ -1037,8 +1021,7 @@ var datos_totales = {
                     nombre: 'Pérez Zeledón'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 119,
                             nombre: 'San Pablo'
@@ -1077,10 +1060,8 @@ var datos_totales = {
             nombre: 'San José'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Alajuela'
@@ -1155,8 +1136,7 @@ var datos_totales = {
                     nombre: 'Alajuela'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 15,
                             nombre: 'San Ramón'
@@ -1231,8 +1211,7 @@ var datos_totales = {
                     nombre: 'San Ramón'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 29,
                             nombre: 'Grecia'
@@ -1272,8 +1251,7 @@ var datos_totales = {
                     nombre: 'Grecia'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 36,
                             nombre: 'San Mateo'
@@ -1298,8 +1276,7 @@ var datos_totales = {
                     nombre: 'San Mateo'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 40,
                             nombre: 'Atenas'
@@ -1344,8 +1321,7 @@ var datos_totales = {
                     nombre: 'Atenas'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 48,
                             nombre: 'Naranjo'
@@ -1390,8 +1366,7 @@ var datos_totales = {
                     nombre: 'Naranjo'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 56,
                             nombre: 'Palmares'
@@ -1431,8 +1406,7 @@ var datos_totales = {
                     nombre: 'Palmares'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 63,
                             nombre: 'San Pedro'
@@ -1462,8 +1436,7 @@ var datos_totales = {
                     nombre: 'Poás'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 68,
                             nombre: 'Orotina'
@@ -1493,8 +1466,7 @@ var datos_totales = {
                     nombre: 'Orotina'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 73,
                             nombre: 'Quesada'
@@ -1564,8 +1536,7 @@ var datos_totales = {
                     nombre: 'San Carlos'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 86,
                             nombre: 'Zarcero'
@@ -1605,8 +1576,7 @@ var datos_totales = {
                     nombre: 'Zarcero'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 93,
                             nombre: 'Sarchí Norte'
@@ -1636,8 +1606,7 @@ var datos_totales = {
                     nombre: 'Valverde Vega'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 98,
                             nombre: 'Upala'
@@ -1682,8 +1651,7 @@ var datos_totales = {
                     nombre: 'Upala'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 106,
                             nombre: 'Los Chiles'
@@ -1708,8 +1676,7 @@ var datos_totales = {
                     nombre: 'Los Chiles'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 110,
                             nombre: 'San Rafael'
@@ -1734,8 +1701,7 @@ var datos_totales = {
                     nombre: 'Guatuso'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 114,
                             nombre: 'Río Cuarto'
@@ -1759,10 +1725,8 @@ var datos_totales = {
             nombre: 'Alajuela'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Oriental'
@@ -1822,8 +1786,7 @@ var datos_totales = {
                     nombre: 'Cartago'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 12,
                             nombre: 'Paraíso'
@@ -1853,8 +1816,7 @@ var datos_totales = {
                     nombre: 'Paraíso'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 17,
                             nombre: 'Tres Ríos'
@@ -1899,8 +1861,7 @@ var datos_totales = {
                     nombre: 'La Unión'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 25,
                             nombre: 'Juan Viñas'
@@ -1920,8 +1881,7 @@ var datos_totales = {
                     nombre: 'Jiménez'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 28,
                             nombre: 'Turrialba'
@@ -1986,8 +1946,7 @@ var datos_totales = {
                     nombre: 'Turrialba'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 40,
                             nombre: 'Pacayas'
@@ -2007,8 +1966,7 @@ var datos_totales = {
                     nombre: 'Alvarado'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 43,
                             nombre: 'San Rafael'
@@ -2038,8 +1996,7 @@ var datos_totales = {
                     nombre: 'Oreamuno'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 48,
                             nombre: 'Tejar'
@@ -2068,10 +2025,8 @@ var datos_totales = {
             nombre: 'Cartago'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Heredia'
@@ -2101,8 +2056,7 @@ var datos_totales = {
                     nombre: 'Heredia'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 6,
                             nombre: 'Barva'
@@ -2137,8 +2091,7 @@ var datos_totales = {
                     nombre: 'Barva'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 12,
                             nombre: 'Santo Domingo'
@@ -2183,8 +2136,7 @@ var datos_totales = {
                     nombre: 'Santo Domingo'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 20,
                             nombre: 'Santa Bárbara'
@@ -2219,8 +2171,7 @@ var datos_totales = {
                     nombre: 'Santa Bárbara'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 26,
                             nombre: 'San Rafael'
@@ -2250,8 +2201,7 @@ var datos_totales = {
                     nombre: 'San Rafael'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 31,
                             nombre: 'San Isidro'
@@ -2276,8 +2226,7 @@ var datos_totales = {
                     nombre: 'San Isidro'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 35,
                             nombre: 'San Antonio'
@@ -2297,8 +2246,7 @@ var datos_totales = {
                     nombre: 'Belén'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 38,
                             nombre: 'San Joaquín'
@@ -2318,8 +2266,7 @@ var datos_totales = {
                     nombre: 'Flores'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 41,
                             nombre: 'San Pablo'
@@ -2334,8 +2281,7 @@ var datos_totales = {
                     nombre: 'San Pablo'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 43,
                             nombre: 'Puerto Viejo'
@@ -2369,10 +2315,8 @@ var datos_totales = {
             nombre: 'Heredia'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Liberia'
@@ -2402,8 +2346,7 @@ var datos_totales = {
                     nombre: 'Liberia'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 6,
                             nombre: 'Nicoya'
@@ -2443,8 +2386,7 @@ var datos_totales = {
                     nombre: 'Nicoya'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 13,
                             nombre: 'Santa Cruz'
@@ -2494,8 +2436,7 @@ var datos_totales = {
                     nombre: 'Santa Cruz'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 22,
                             nombre: 'Bagaces'
@@ -2520,8 +2461,7 @@ var datos_totales = {
                     nombre: 'Bagaces'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 26,
                             nombre: 'Filadelfia'
@@ -2546,8 +2486,7 @@ var datos_totales = {
                     nombre: 'Carrillo'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 30,
                             nombre: 'Cañas'
@@ -2577,8 +2516,7 @@ var datos_totales = {
                     nombre: 'Cañas'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 35,
                             nombre: 'Las Juntas'
@@ -2603,8 +2541,7 @@ var datos_totales = {
                     nombre: 'Abangares'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 39,
                             nombre: 'Tilarán'
@@ -2644,8 +2581,7 @@ var datos_totales = {
                     nombre: 'Tilarán'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 46,
                             nombre: 'Carmona'
@@ -2680,8 +2616,7 @@ var datos_totales = {
                     nombre: 'Nandayure'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 52,
                             nombre: 'La Cruz'
@@ -2706,8 +2641,7 @@ var datos_totales = {
                     nombre: 'La Cruz'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 56,
                             nombre: 'Hojancha'
@@ -2741,10 +2675,8 @@ var datos_totales = {
             nombre: 'Guanacaste'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Puntarenas'
@@ -2829,8 +2761,7 @@ var datos_totales = {
                     nombre: 'Puntarenas'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 17,
                             nombre: 'Espíritu Santo'
@@ -2865,8 +2796,7 @@ var datos_totales = {
                     nombre: 'Esparza'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 23,
                             nombre: 'Buenos Aires'
@@ -2916,8 +2846,7 @@ var datos_totales = {
                     nombre: 'Buenos Aires'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 32,
                             nombre: 'Miramar'
@@ -2937,8 +2866,7 @@ var datos_totales = {
                     nombre: 'Montes de Oro'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 35,
                             nombre: 'Cortés'
@@ -2973,8 +2901,7 @@ var datos_totales = {
                     nombre: 'Osa'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 41,
                             nombre: 'Quepos'
@@ -2994,8 +2921,7 @@ var datos_totales = {
                     nombre: 'Quepos'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 44,
                             nombre: 'Golfito'
@@ -3020,8 +2946,7 @@ var datos_totales = {
                     nombre: 'Golfito'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 48,
                             nombre: 'San Vito'
@@ -3056,19 +2981,16 @@ var datos_totales = {
                     nombre: 'Coto Brus'
                 },
                 {
-                    distrito: [
-                        {
-                            secuencia: 1,
-                            'número': 54,
-                            nombre: 'Parrita'
-                        }
-                    ],
+                    distrito: [{
+                        secuencia: 1,
+                        'número': 54,
+                        nombre: 'Parrita'
+                    }],
                     'número': 9,
                     nombre: 'Parrita'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 55,
                             nombre: 'Corredor'
@@ -3093,8 +3015,7 @@ var datos_totales = {
                     nombre: 'Corredores'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 59,
                             nombre: 'Jacó'
@@ -3113,10 +3034,8 @@ var datos_totales = {
             nombre: 'Puntarenas'
         },
         {
-            'cantón': [
-                {
-                    distrito: [
-                        {
+            'cantón': [{
+                    distrito: [{
                             secuencia: 1,
                             'número': 1,
                             nombre: 'Limón'
@@ -3141,8 +3060,7 @@ var datos_totales = {
                     nombre: 'Limón'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 5,
                             nombre: 'Guápiles'
@@ -3182,8 +3100,7 @@ var datos_totales = {
                     nombre: 'Pococí'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 12,
                             nombre: 'Siquirres'
@@ -3218,8 +3135,7 @@ var datos_totales = {
                     nombre: 'Siquirres'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 18,
                             nombre: 'Bratsi'
@@ -3244,8 +3160,7 @@ var datos_totales = {
                     nombre: 'Talamanca'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 22,
                             nombre: 'Matina'
@@ -3265,8 +3180,7 @@ var datos_totales = {
                     nombre: 'Matina'
                 },
                 {
-                    distrito: [
-                        {
+                    distrito: [{
                             secuencia: 1,
                             'número': 25,
                             nombre: 'Guácimo'
